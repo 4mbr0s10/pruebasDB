@@ -1,11 +1,15 @@
+package Conexion;
+
 import java.sql.*;
+
 /**
  *
  * @author celta
  */
 public class Conexion {
+
     Statement sentence;
-            
+
     Connection c;
     String nombreTabla;
 
@@ -18,73 +22,69 @@ public class Conexion {
     public Conexion() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    public  void crearBase(String nombreTabla)throws SQLException{
+
+    public void crearBase(String nombreTabla) throws SQLException {
         this.nombreTabla = nombreTabla;
         try {
-        sentence=c.createStatement();
-        String sql= "CREATE TABLE IF NOT EXISTS "+nombreTabla+" "+
-                "(ID_PARTIDA INT NOT NULL PRIMARY KEY,"+
-                "NOMBRE TEXT NOT NULL,"+
-                "SCORE INT NOT NULL)";
-               
-        sentence.execute(sql);
-        sentence.close();
-        c.close();
+            sentence = c.createStatement();
+            String sql ="CREATE TABLE IF NOT EXISTS " + nombreTabla + " "
+                    + "(NOMBRE TEXT NOT NULL,"
+                    + "SCORE INT NOT NULL"
+                    + ")";
+
+            sentence.execute(sql);
+            sentence.close();
+            c.close();
             System.out.println("TABLA CREADA");
         } catch (Exception e) {
             System.err.println("ERROR CREACION TABLA");
         }
-        
-        
-    
-        
+
     }
-    
-    
-    
-    public  void conectarBase(){
+
+    public void conectarBase() {
         try {
             Class.forName("org.sqlite.JDBC");
-            c=DriverManager.getConnection("jdbc:sqlite:exceptionRun.db");
-            
+            c = DriverManager.getConnection("jdbc:sqlite:exceptionRun.db");
+
         } catch (Exception e) {
             System.err.println("Error al conectar");
         }
-        
-        
+
     }
-    public  void insertar(String nombreTabla) throws SQLException, ClassNotFoundException{
-  
-        try {
-            PreparedStatement st = c.prepareStatement("insert into "+nombreTabla+" (?,?,?)");
-            st.setString(1, "1");
-            st.setString(2, "HPA");
-            st.setString(3, "55");
-            st.execute();
-        } catch (Exception e) {
-            System.out.println("NO INSERTA");
-        }
-        
-        
-        
-    }
-    public void consultar(String nombreTabla) throws SQLException, ClassNotFoundException{
+
+    public void insertar() throws SQLException, ClassNotFoundException {
        
+        try {
+             Class.forName("org.sqlite.JDBC");
+        c = DriverManager.getConnection("jdbc:sqlite:exceptionRun.db");
+           sentence = c.createStatement();
+            PreparedStatement ps = c.prepareStatement("insert into Puntuaciones values (?, ?)");
+             ps.setString(1, "CCC");
+            ps.setString(2, "77");
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    public void consultar(String nombreTabla) throws SQLException, ClassNotFoundException {
+
         ResultSet rs = null;
         try {
             PreparedStatement st = c.prepareStatement("select * from Puntuaciones");
             rs = st.executeQuery();
-            String dos = rs.getString("ID_PARTIDA");
-            String uno = rs.getString("NOMBRE");
+            
+            String dos = rs.getString("NOMBRE");
             String tres = rs.getString("SCORE");
-            System.out.println(uno);
+          
             System.out.println(dos);
             System.out.println(tres);
         } catch (Exception e) {
             System.out.println("NO CONSULTA");
         }
-        
+
     }
-    
+
 }
